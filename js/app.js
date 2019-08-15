@@ -91,15 +91,22 @@ function shuffle(array) {
  *  - if the list already has another card, check to see if the two cards match
  *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
  *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
+ *    + increment the move clickCounter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
 let openCards = [];
+let matchedCards = [];
+let clickCounter = 0;
+let movesCounter = 0;
+let moves = document.querySelector('.moves');
 
 function cardClicked(clickEvent) {
+
   clickEvent.target.classList.add('match');
   openCards.push(clickEvent.target);
+  clickCounter += 1;
+  console.log(clickCounter);
 
   if (openCards !== undefined || openCards.length !== 0) {
     if (openCards.length > 1) {
@@ -108,15 +115,31 @@ function cardClicked(clickEvent) {
       cardsMatch = openCards[0].innerHTML == openCards[1].innerHTML;
       if (cardsMatch) {
         console.log('cards matched!');
+        matchedCards.push(openCards[0]);
+        openCards.shift();
+        openCards.shift();
+        clickCounter = 0;
+        movesCounter += 1;
+        moves.textContent = movesCounter;
+
+        if (matchedCards.length == 8) {
+          alert("Congratulations, you've won!" + "\nYour score was: " + movesCounter);
+        }
       }
 
       if (!cardsMatch) {
         console.log('cards did not match');
-        for (let i = 0; i < openCards.length; i++) {
-          openCards[i].classList.remove('match');
+        if (clickCounter == 3) {
+          for (let i = 0; i < openCards.length - 1; i++) {
+            openCards[i].classList.remove('match');
+          }
+          openCards.shift();
+          openCards.shift();
+          clickCounter = 1;
+          movesCounter += 1;
+          moves.textContent = movesCounter;
         }
-        openCards.pop();
-        openCards.pop();
+
       }
 
     }
