@@ -2,14 +2,23 @@
  * Create a list that holds all of your cards
  */
 const cards = ['Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb', 'Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb'];
-let deck = document.querySelector('.deck');
+const deck = document.querySelector('.deck');
+const scoreTable = document.querySelector('.score-panel .stars');
+const scoreBox1 = document.createElement('li');
+const scoreBox2 = document.createElement('li');
+const scoreBox3 = document.createElement('li');
+const scoreStars1 = document.createElement('i');
+const scoreStars2 = document.createElement('i');
+const scoreStars3 = document.createElement('i');
 
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
+ *   - build score table
  */
+
 // shuffle cards
 shuffle(cards);
 // Create card html
@@ -67,6 +76,23 @@ for (let i = 0; i < cards.length; i++) {
 for (let i = 0; i < cards.length; i++) {
   deck.innerHTML += cards[i];
 }
+// Add stars for scoring, needs refactoring for efficiency
+scoreStars1.classList.add('fa')
+scoreStars1.classList.add('fa-star');
+scoreStars2.classList.add('fa')
+scoreStars2.classList.add('fa-star');
+scoreStars3.classList.add('fa')
+scoreStars3.classList.add('fa-star');
+
+scoreBox1.appendChild(scoreStars1);
+scoreBox2.appendChild(scoreStars2);
+scoreBox3.appendChild(scoreStars3);
+
+scoreTable.appendChild(scoreBox1);
+scoreTable.appendChild(scoreBox2);
+scoreTable.appendChild(scoreBox3);
+
+
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -103,45 +129,50 @@ let moves = document.querySelector('.moves');
 
 function cardClicked(clickEvent) {
 
-  clickEvent.target.classList.add('match');
-  openCards.push(clickEvent.target);
-  clickCounter += 1;
-  console.log(clickCounter);
+  const thisEvent = clickEvent.target.classList;
 
-  if (openCards !== undefined || openCards.length !== 0) {
-    if (openCards.length > 1) {
-      console.log('there is more than one card selected');
-      //cardMatch(openCards);
-      cardsMatch = openCards[0].innerHTML == openCards[1].innerHTML;
-      if (cardsMatch) {
-        console.log('cards matched!');
-        matchedCards.push(openCards[0]);
-        openCards.shift();
-        openCards.shift();
-        clickCounter = 0;
-        movesCounter += 1;
-        moves.textContent = movesCounter;
+  if (thisEvent != 'card match') {
 
-        if (matchedCards.length == 8) {
-          alert("Congratulations, you've won!" + "\nYour score was: " + movesCounter);
-        }
-      }
+    clickEvent.target.classList.add('match');
+    openCards.push(clickEvent.target);
+    clickCounter += 1;
+    console.log(clickCounter + '' + thisEvent);
 
-      if (!cardsMatch) {
-        console.log('cards did not match');
-        if (clickCounter == 3) {
-          for (let i = 0; i < openCards.length - 1; i++) {
-            openCards[i].classList.remove('match');
-          }
+    if (openCards !== undefined || openCards.length !== 0) {
+      if (openCards.length > 1) {
+        console.log('there is more than one card selected');
+        //cardMatch(openCards);
+        cardsMatch = openCards[0].innerHTML == openCards[1].innerHTML;
+        if (cardsMatch) {
+          console.log('cards matched!');
+          matchedCards.push(openCards[0]);
           openCards.shift();
           openCards.shift();
-          clickCounter = 1;
+          clickCounter = 0;
           movesCounter += 1;
           moves.textContent = movesCounter;
+
+          if (matchedCards.length == 8) {
+            alert("Congratulations, you've won!" + "\nYour score was: " + movesCounter);
+          }
+        }
+
+        if (!cardsMatch) {
+          console.log('cards did not match');
+          if (clickCounter == 3) {
+            for (let i = 0; i < openCards.length - 1; i++) {
+              openCards[i].classList.remove('match');
+            }
+            openCards.shift();
+            openCards.shift();
+            clickCounter = 1;
+            movesCounter += 1;
+            moves.textContent = movesCounter;
+          }
+
         }
 
       }
-
     }
   }
 }
