@@ -1,8 +1,11 @@
 /*
  * Create a list that holds all of your cards
+ * Intialize and store deck and alert box element variables
  */
 const cards = ['Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb', 'Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb'];
 const deck = document.querySelector('.deck');
+const alertBox = document.querySelector('.alert');
+const winbtn = document.querySelector('.win-btn');
 
 
 /*
@@ -162,7 +165,7 @@ function cardClicked(clickEvent) {
 
           // Checks to see if the matched card was the last one to match and displays win alert
           if (matchedCards.length == 8) {
-            alert("Congratulations, you've won!" + "\nYour score was: " + movesCounter);
+            alertBox.style.display = "block";
           }
         }
 
@@ -197,16 +200,14 @@ function cardClicked(clickEvent) {
   }
 }
 
-function cardMatch() {
-
-}
-
-function cardsNotMatch() {
-
-}
-
-function addMove() {
+function toggleAlert() {
+  if (alertBox.style.display === "none") {
+    alertBox.style.display = "block";
+  }else {
+    alertBox.style.display = "none";
+  }
 
 }
 
 deck.addEventListener('click', cardClicked);
+alertBox.addEventListener('click', toggleAlert);
