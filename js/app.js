@@ -1,11 +1,14 @@
 /*
  * Create a list that holds all of your cards
- * Intialize and store deck and alert box element variables
  */
 const cards = ['Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb', 'Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb'];
+
+// Intialize and store deck and alert box element variables
 const deck = document.querySelector('.deck');
 const alertBox = document.querySelector('.alert');
-const winbtn = document.querySelector('.win-btn');
+const alertScore = document.querySelector('.alert .score');
+const replaybtn = document.querySelector('.restart');
+alertScore.innerHTML = '&star;&star;&star;';
 
 
 /*
@@ -16,63 +19,72 @@ const winbtn = document.querySelector('.win-btn');
  *   - build score table
  */
 
-// shuffle cards
+// Shuffle and create cards
 shuffle(cards);
-// Create card html
-for (let i = 0; i < cards.length; i++) {
+createCards();
+appendCards();
 
-  if (cards[i] === 'Diamond') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-diamond"></i>' +
-    '</li>';
-  }
+// Create card html function
+function createCards() {
+  for (let i = 0; i < cards.length; i++) {
 
-  if (cards[i] === 'Plane') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-paper-plane-o"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Diamond') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-diamond"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Anchor') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-anchor"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Plane') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-paper-plane-o"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Bolt') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-bolt"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Anchor') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-anchor"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Cube') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-cube"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Bolt') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-bolt"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Leaf') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-leaf"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Cube') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-cube"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Bicycle') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-bicycle"></i>' +
-    '</li>';
-  }
+    if (cards[i] === 'Leaf') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-leaf"></i>' +
+      '</li>';
+    }
 
-  if (cards[i] === 'Bomb') {
-    cards[i] = '<li class="card">' +
-    '<i class="fa fa-bomb"></i>' +
-    '</li>';
+    if (cards[i] === 'Bicycle') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-bicycle"></i>' +
+      '</li>';
+    }
+
+    if (cards[i] === 'Bomb') {
+      cards[i] = '<li class="card">' +
+      '<i class="fa fa-bomb"></i>' +
+      '</li>';
+    }
   }
 }
-// Append HTML to deck
-for (let i = 0; i < cards.length; i++) {
-  deck.innerHTML += cards[i];
+
+// Append HTML to deck function
+function appendCards(){
+  for (let i = 0; i < cards.length; i++) {
+    deck.innerHTML += cards[i];
+  }
 }
+
 // Add stars for scoring, needs refactoring for efficiency
 const scoreTable = document.querySelector('.score-panel .stars');
 const scoreBox1 = document.createElement('li');
@@ -190,10 +202,13 @@ function cardClicked(clickEvent) {
       // Removes stars from score as the move counter increases
       if (movesCounter == 10 && clickCounter == 1) {
         scoreStars3.parentNode.removeChild(scoreStars3);
+        alertScore.innerHTML = '&star;&star;-';
       }else if (movesCounter == 15 && clickCounter == 1) {
         scoreStars2.parentNode.removeChild(scoreStars2);
+        alertScore.innerHTML = '&star;--';
       }else if (movesCounter == 20 && clickCounter == 1) {
         scoreStars1.parentNode.removeChild(scoreStars1);
+        alertScore.innerHTML = '---<br>Better Luck Next Time!';
       }
 
     }
@@ -206,8 +221,21 @@ function toggleAlert() {
   }else {
     alertBox.style.display = "none";
   }
+}
 
+function replay() {
+  for (let i = 0; i < matchedCards.length; i++) {
+    matchedCards[i].classList.remove('match');
+
+  }
+  shuffle(cards);
+  deck.innerHTML = '';
+  appendCards();
+  movesCounter = 0;
+  clickCounter = 0;
+  moves.textContent = 0;
 }
 
 deck.addEventListener('click', cardClicked);
 alertBox.addEventListener('click', toggleAlert);
+replaybtn.addEventListener('click', replay);
