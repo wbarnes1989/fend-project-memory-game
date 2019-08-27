@@ -7,7 +7,9 @@ const cards = ['Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 
 const deck = document.querySelector('.deck');
 const alertBox = document.querySelector('.alert');
 const alertScore = document.querySelector('.alert .score');
-const replaybtn = document.querySelector('.restart');
+const replayBtn = document.querySelector('.restart');
+const time = document.querySelector('.score-panel .timer');
+const alertTime = document.querySelector('.alert .timer');
 alertScore.innerHTML = '&star;&star;&star;';
 
 
@@ -16,7 +18,7 @@ alertScore.innerHTML = '&star;&star;&star;';
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
- *   - build score table
+ *   - build score table and timer
  */
 
 // Shuffle and create cards
@@ -83,6 +85,23 @@ function appendCards(){
   for (let i = 0; i < cards.length; i++) {
     deck.innerHTML += cards[i];
   }
+}
+
+// Timer for timing the game
+let start = Date.now();
+
+let myTimer = setInterval(timerFunc, 1000)
+let timer = 0;
+
+function timerFunc() {
+  let difference = Date.now() - start;
+  timer = Math.floor(difference / 1000);
+  time.innerHTML = timer;
+  alertTime.innerHTML = timer;
+}
+
+function stopTimer() {
+  clearInterval(myTimer);
 }
 
 // Add stars for scoring, needs refactoring for efficiency
@@ -177,7 +196,9 @@ function cardClicked(clickEvent) {
 
           // Checks to see if the matched card was the last one to match and displays win alert
           if (matchedCards.length == 8) {
+            stopTimer();
             alertBox.style.display = "block";
+
           }
         }
 
@@ -228,14 +249,22 @@ function replay() {
     matchedCards[i].classList.remove('match');
 
   }
+
   shuffle(cards);
   deck.innerHTML = '';
   appendCards();
   movesCounter = 0;
   clickCounter = 0;
   moves.textContent = 0;
+  scoreBox1.appendChild(scoreStars1);
+  scoreBox2.appendChild(scoreStars2);
+  scoreBox3.appendChild(scoreStars3);
+  timer = 0;
+  start = Date.now();
+  time.innerHTML = timer;
+  myTimer = setInterval(timerFunc, 1000);
 }
 
 deck.addEventListener('click', cardClicked);
 alertBox.addEventListener('click', toggleAlert);
-replaybtn.addEventListener('click', replay);
+replayBtn.addEventListener('click', replay);
