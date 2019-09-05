@@ -4,6 +4,7 @@
 
 * [Instructions](#instructions)
 * [Contributing](#contributing)
+* [Game](#game)
 
 ## Instructions
 
@@ -18,3 +19,8 @@ For specific, detailed instructions, look at the project instructions in the [Ud
 This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
 
 For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Game
+
+The game is a simple memory game where you are given a deck of cards to match. The game will track how long it takes for you to complete and provide a score.
+Time doesn't affect your score but the number of moves that you make will.

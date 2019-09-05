@@ -4,13 +4,15 @@
 const cards = ['Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb', 'Diamond', 'Plane', 'Anchor', 'Bolt', 'Cube', 'Leaf', 'Bicycle', 'Bomb'];
 
 // Intialize and store deck and alert box element variables
-const deck = document.querySelector('.deck');
-const alertBox = document.querySelector('.alert');
-const alertScore = document.querySelector('.alert .score');
-const replayBtn = document.querySelector('.restart');
-const time = document.querySelector('.score-panel .timer');
-const alertTime = document.querySelector('.alert .timer');
-alertScore.innerHTML = '&star;&star;&star;';
+const DECK = document.querySelector('.deck');
+const ALERTBOX = document.querySelector('.alert');
+const ALERTSCORE = document.querySelector('.alert .score');
+const REPLAYBTN = document.querySelector('.restart');
+const TIME = document.querySelector('.score-panel .timer');
+const ALERTTIME = document.querySelector('.alert .timer');
+const CLOSEBUTTON = document.querySelector('.alert .close .button');
+const REPLAYALRTBUTTON = document.querySelector('.alert .retry .button');
+ALERTSCORE.innerHTML = '&star;&star;&star;';
 
 
 /*
@@ -83,7 +85,7 @@ function createCards() {
 // Append HTML to deck function
 function appendCards(){
   for (let i = 0; i < cards.length; i++) {
-    deck.innerHTML += cards[i];
+    DECK.innerHTML += cards[i];
   }
 }
 
@@ -96,8 +98,8 @@ let timer = 0;
 function timerFunc() {
   let difference = Date.now() - start;
   timer = Math.floor(difference / 1000);
-  time.innerHTML = timer;
-  alertTime.innerHTML = timer;
+  TIME.innerHTML = timer;
+  ALERTTIME.innerHTML = timer;
 }
 
 function stopTimer() {
@@ -197,7 +199,7 @@ function cardClicked(clickEvent) {
           // Checks to see if the matched card was the last one to match and displays win alert
           if (matchedCards.length == 8) {
             stopTimer();
-            alertBox.style.display = "block";
+            ALERTBOX.style.display = "block";
 
           }
         }
@@ -223,35 +225,45 @@ function cardClicked(clickEvent) {
       // Removes stars from score as the move counter increases
       if (movesCounter == 10 && clickCounter == 1) {
         scoreStars3.parentNode.removeChild(scoreStars3);
-        alertScore.innerHTML = '&star;&star;-';
+        ALERTSCORE.innerHTML = '&star;&star;-';
       }else if (movesCounter == 15 && clickCounter == 1) {
         scoreStars2.parentNode.removeChild(scoreStars2);
-        alertScore.innerHTML = '&star;--';
+        ALERTSCORE.innerHTML = '&star;--';
       }else if (movesCounter == 20 && clickCounter == 1) {
         scoreStars1.parentNode.removeChild(scoreStars1);
-        alertScore.innerHTML = '---<br>Better Luck Next Time!';
+        ALERTSCORE.innerHTML = '---<br>Better Luck Next Time!';
       }
 
     }
   }
 }
 
+// Toggles Win Alert Box visibility
 function toggleAlert() {
-  if (alertBox.style.display === "none") {
-    alertBox.style.display = "block";
+  if (ALERTBOX.style.display === "none") {
+    ALERTBOX.style.display = "block";
   }else {
-    alertBox.style.display = "none";
+    ALERTBOX.style.display = "none";
   }
 }
-
+// Resets the game to a playable status after a win or clicking replay button
 function replay() {
+  // Flips cards back over
   for (let i = 0; i < matchedCards.length; i++) {
     matchedCards[i].classList.remove('match');
-
   }
 
+  // Empties the matchedCard array so the win alert can display more than once
+  let matchedCardsLength = matchedCards.length;
+  for (let i = 0; i < matchedCardsLength; i++) {
+    matchedCards.shift();
+  }
+
+  /* Shuffles cards, resets deck, rebuilds deck with new cards,
+  * resets counters, score and timer for next play
+  */
   shuffle(cards);
-  deck.innerHTML = '';
+  DECK.innerHTML = '';
   appendCards();
   movesCounter = 0;
   clickCounter = 0;
@@ -261,10 +273,16 @@ function replay() {
   scoreBox3.appendChild(scoreStars3);
   timer = 0;
   start = Date.now();
-  time.innerHTML = timer;
+  TIME.innerHTML = timer;
   myTimer = setInterval(timerFunc, 1000);
 }
 
-deck.addEventListener('click', cardClicked);
-alertBox.addEventListener('click', toggleAlert);
-replayBtn.addEventListener('click', replay);
+function alertReplay() {
+  toggleAlert();
+  replay();
+}
+
+DECK.addEventListener('click', cardClicked);
+CLOSEBUTTON.addEventListener('click', toggleAlert);
+REPLAYALRTBUTTON.addEventListener('click', alertReplay);
+REPLAYBTN.addEventListener('click', replay);
